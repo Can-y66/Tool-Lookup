@@ -1,7 +1,7 @@
 
 ## Lookup Ip by BlackHunters:
 
-![image](https://github.com/user-attachments/assets/a70e5f0d-c24c-49b6-b8cf-d4a33ad40242)
+![image](https://github.com/user-attachments/assets/7473e5db-4655-49e3-ad2c-78ce0384f54f)
 
 
 
