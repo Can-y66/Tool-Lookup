@@ -7,7 +7,7 @@
 
 ## Installation
 
-Install my-project with .bat
+Install ToolLookup with .bat
 
 ```bash
   just download the file and start the .bat
