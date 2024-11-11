@@ -1,10 +1,5 @@
 
-# Lookup Tool By BlackHunters
-
-A brief description of what this project does and who it's for
-
-
-## Lookup Ip:
+## Lookup Ip by BlackHunters:
 
 ![image](https://github.com/user-attachments/assets/a70e5f0d-c24c-49b6-b8cf-d4a33ad40242)
 
