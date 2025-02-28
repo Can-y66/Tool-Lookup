@@ -1,7 +1,7 @@
 Source here
 @echo off
 chcp 65001
-title Ip Lookup Tool - Can.y66
+title Ip Lookup Tool - Can
 color 4
 :menu
 cls
