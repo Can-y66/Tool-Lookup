@@ -14,5 +14,4 @@ Install ToolLookup with .bat
 ```
     
 ## 💻 Contact Me
-you can contact me on discord: ektr.66
-
+you can contact me on discord: ogmq
