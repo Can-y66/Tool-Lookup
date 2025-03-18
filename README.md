@@ -1,5 +1,5 @@
 
-## Lookup Ip by BlackHunters:
+## Lookup Ip by Can:
 
 ![image](https://github.com/user-attachments/assets/7473e5db-4655-49e3-ad2c-78ce0384f54f)
 
