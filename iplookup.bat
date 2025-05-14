@@ -1,48 +1,60 @@
-Source here
-@echo off
-chcp 65001
-title Ip Lookup Tool - Can
-color 4
-:menu
-cls
-echo  ██╗      ██████╗  ██████╗ ██╗  ██╗██╗   ██╗██████╗     ████████╗ ██████╗  ██████╗ ██╗     
-echo  ██║     ██╔═══██╗██╔═══██╗██║ ██╔╝██║   ██║██╔══██╗    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     
-echo  ██║     ██║   ██║██║   ██║█████╔╝ ██║   ██║██████╔╝       ██║   ██║   ██║██║   ██║██║     
-echo  ██║     ██║   ██║██║   ██║██╔═██╗ ██║   ██║██╔═══╝        ██║   ██║   ██║██║   ██║██║     
-echo  ███████╗╚██████╔╝╚██████╔╝██║  ██╗╚██████╔╝██║            ██║   ╚██████╔╝╚██████╔╝███████╗
-echo  ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝            ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝
-echo =================================================
-echo 1) Exit
-echo 2) Ip Geo Lookup
-echo 3) Back To Main Menu
-echo ================================================
-set /p choice=Enter your choice:
+#!/data/data/com.termux/files/usr/bin/bash
 
-if "%choice&"=="" goto menu
-if "%choice&"=="1" goto end
-if "%choice&"=="2" goto ip_geo_lookup
-if "%choice&"=="3" goto menu
+# Couleurs et titre (affichage basique pour Termux)
+RED='\033[1;31m'
+NC='\033[0m' # No Color
 
-:ip_geo_lookup
-cls
-echo ███████╗███╗   ██╗████████╗███████╗██████╗     ██╗██████╗ 
-echo ██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗    ██║██╔══██╗
-echo █████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝    ██║██████╔╝
-echo ██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗    ██║██╔═══╝ 
-echo ███████╗██║ ╚████║   ██║   ███████╗██║  ██║    ██║██║     
-echo ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝    ╚═╝╚═╝
-echo. ================================================
-echo Enter An IP address to lookup (or type back to return to the main menu):
-set /p ip=
-if "%ip%"=="back" goto menu
+function menu() {
+    clear
+    echo -e "${RED}"
+    echo " ██╗      ██████╗  ██████╗ ██╗  ██╗██╗   ██╗██████╗     ████████╗ ██████╗  ██████╗ ██╗     "
+    echo " ██║     ██╔═══██╗██╔═══██╗██║ ██╔╝██║   ██║██╔══██╗    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     "
+    echo " ██║     ██║   ██║██║   ██║█████╔╝ ██║   ██║██████╔╝       ██║   ██║   ██║██║   ██║██║     "
+    echo " ██║     ██║   ██║██║   ██║██╔═██╗ ██║   ██║██╔═══╝        ██║   ██║   ██║██║   ██║██║     "
+    echo " ███████╗╚██████╔╝╚██████╔╝██║  ██╗╚██████╔╝██║            ██║   ╚██████╔╝╚██████╔╝███████╗"
+    echo " ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝            ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝"
+    echo "================================================="
+    echo "1) Exit"
+    echo "2) IP Geo Lookup"
+    echo "3) Back to Main Menu"
+    echo "================================================="
+    echo -n "Enter your choice: "
+    read choice
 
-curl "https://ipinfo.io/%ip%/json" -o geolocation.json
-echo ==================================
-echo IP Geolocation for &`%ip%:
-type geolocation.json
-del gelocation.json
-echo =================================
-pause
-goto ip_geo_lookup
+    case $choice in
+        1) exit ;;
+        2) ip_geo_lookup ;;
+        3) menu ;;
+        *) menu ;;
+    esac
+}
 
-:end
+function ip_geo_lookup() {
+    clear
+    echo "███████╗███╗   ██╗████████╗███████╗██████╗     ██╗██████╗ "
+    echo "██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗    ██║██╔══██╗"
+    echo "█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝    ██║██████╔╝"
+    echo "██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗    ██║██╔═══╝ "
+    echo "███████╗██║ ╚████║   ██║   ███████╗██║  ██║    ██║██║     "
+    echo "╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝    ╚═╝╚═╝     "
+    echo "==================================================="
+    echo -n "Enter an IP address (or type 'back' to return): "
+    read ip
+
+    if [[ "$ip" == "back" ]]; then
+        menu
+    fi
+
+    curl -s "https://ipinfo.io/${ip}/json" -o geolocation.json
+
+    echo "=================================="
+    echo "IP Geolocation for $ip:"
+    cat geolocation.json
+    rm -f geolocation.json
+    echo "=================================="
+    read -p "Press Enter to continue..."
+    ip_geo_lookup
+}
+
+# Lancement du menu
+menu
