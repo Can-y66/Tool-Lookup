@@ -1,60 +1,61 @@
-#!/data/data/com.termux/files/usr/bin/bash
+import requests
+import os
 
-# Couleurs
-RED='\033[1;31m'
-NC='\033[0m'
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-function menu() {
-    clear
-    echo -e "${RED}"
-    echo "Скрыть личную жизнь не так просто."
-    echo "================================================="
-    echo "1) Quitter"
-    echo "2) IP Geo Lookup"
-    echo "3) Retour au menu principal"
-    echo "================================================="
-    echo -n "Fais ton choix: "
-    read choice
+def main_menu():
+    while True:
+        clear()
+        print("""
+ ██╗      ██████╗  ██████╗ ██╗  ██╗██╗   ██╗██████╗     ████████╗ ██████╗  ██████╗ ██╗     
+ ██║     ██╔═══██╗██╔═══██╗██║ ██╔╝██║   ██║██╔══██╗    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     
+ ██║     ██║   ██║██║   ██║█████╔╝ ██║   ██║██████╔╝       ██║   ██║   ██║██║   ██║██║     
+ ██║     ██║   ██║██║   ██║██╔═██╗ ██║   ██║██╔═══╝        ██║   ██║   ██║██║   ██║██║     
+ ███████╗╚██████╔╝╚██████╔╝██║  ██╗╚██████╔╝██║            ██║   ╚██████╔╝╚██████╔╝███████╗
+ ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝            ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝
+=================================================
+1) Quitter
+2) IP Geo Lookup
+3) Retour au menu principal
+=================================================
+""")
+        choice = input("Entrez votre choix : ").strip()
+        if choice == "1":
+            break
+        elif choice == "2":
+            ip_geo_lookup()
+        elif choice == "3":
+            continue
 
-    case $choice in
-        1) exit ;;
-        2) ip_geo_lookup ;;
-        3) menu ;;
-        *) menu ;;
-    esac
-}
+def ip_geo_lookup():
+    while True:
+        clear()
+        print("""
+███████╗███╗   ██╗████████╗███████╗██████╗     ██╗██████╗ 
+██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗    ██║██╔══██╗
+█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝    ██║██████╔╝
+██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗    ██║██╔═══╝ 
+███████╗██║ ╚████║   ██║   ███████╗██║  ██║    ██║██║     
+╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝    ╚═╝╚═╝     
+=================================================
+""")
+        ip = input("Entrez une adresse IP (ou tapez 'back' pour revenir) : ").strip()
+        if ip.lower() == "back":
+            break
 
-function ip_geo_lookup() {
-    clear
-    echo -e "${RED}"
-    echo "=========== LOCALISATION IP =========="
-    echo -n "Entre une adresse IP (ou 'back' pour revenir) : "
-    read ip
+        response = requests.get(f"https://ipinfo.io/{ip}/json")
+        if response.status_code == 200:
+            data = response.json()
+            print("\n=========== Résultats ===========")
+            for key in ['ip', 'city', 'region', 'country', 'loc', 'org', 'postal']:
+                if key in data:
+                    print(f"{key.capitalize()} : {data[key]}")
+            print("=================================")
+        else:
+            print("Erreur lors de la requête.")
 
-    if [[ "$ip" == "back" ]]; then
-        menu
-    fi
+        input("\nAppuyez sur Entrée pour continuer...")
 
-    echo "=================================="
-    echo "Résultat de géolocalisation pour $ip :"
-    echo
-
-    # Appel API + extraction des champs utiles
-    curl -s "https://ipinfo.io/${ip}/json" | jq -r '
-        "IP: \(.ip)",
-        "Ville: \(.city)",
-        "Région: \(.region)",
-        "Pays: \(.country)",
-        "Fournisseur: \(.org)",
-        "Code Postal: \(.postal)",
-        "Localisation GPS: \(.loc)"
-    '
-
-    echo
-    echo "=================================="
-    read -p "Appuie sur Entrée pour continuer..."
-    ip_geo_lookup
-}
-
-# Démarrer le menu
-menu
+if __name__ == "__main__":
+    main_menu()
