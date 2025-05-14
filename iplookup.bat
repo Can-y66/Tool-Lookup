@@ -1,24 +1,19 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-# Couleurs et titre (affichage basique pour Termux)
+# Couleurs
 RED='\033[1;31m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 function menu() {
     clear
     echo -e "${RED}"
-    echo " ██╗      ██████╗  ██████╗ ██╗  ██╗██╗   ██╗██████╗     ████████╗ ██████╗  ██████╗ ██╗     "
-    echo " ██║     ██╔═══██╗██╔═══██╗██║ ██╔╝██║   ██║██╔══██╗    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     "
-    echo " ██║     ██║   ██║██║   ██║█████╔╝ ██║   ██║██████╔╝       ██║   ██║   ██║██║   ██║██║     "
-    echo " ██║     ██║   ██║██║   ██║██╔═██╗ ██║   ██║██╔═══╝        ██║   ██║   ██║██║   ██║██║     "
-    echo " ███████╗╚██████╔╝╚██████╔╝██║  ██╗╚██████╔╝██║            ██║   ╚██████╔╝╚██████╔╝███████╗"
-    echo " ╚══════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚═╝            ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝"
+    echo "Скрыть личную жизнь не так просто."
     echo "================================================="
-    echo "1) Exit"
+    echo "1) Quitter"
     echo "2) IP Geo Lookup"
-    echo "3) Back to Main Menu"
+    echo "3) Retour au menu principal"
     echo "================================================="
-    echo -n "Enter your choice: "
+    echo -n "Fais ton choix: "
     read choice
 
     case $choice in
@@ -31,30 +26,35 @@ function menu() {
 
 function ip_geo_lookup() {
     clear
-    echo "███████╗███╗   ██╗████████╗███████╗██████╗     ██╗██████╗ "
-    echo "██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔══██╗    ██║██╔══██╗"
-    echo "█████╗  ██╔██╗ ██║   ██║   █████╗  ██████╔╝    ██║██████╔╝"
-    echo "██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ██╔══██╗    ██║██╔═══╝ "
-    echo "███████╗██║ ╚████║   ██║   ███████╗██║  ██║    ██║██║     "
-    echo "╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝    ╚═╝╚═╝     "
-    echo "==================================================="
-    echo -n "Enter an IP address (or type 'back' to return): "
+    echo -e "${RED}"
+    echo "=========== LOCALISATION IP =========="
+    echo -n "Entre une adresse IP (ou 'back' pour revenir) : "
     read ip
 
     if [[ "$ip" == "back" ]]; then
         menu
     fi
 
-    curl -s "https://ipinfo.io/${ip}/json" -o geolocation.json
+    echo "=================================="
+    echo "Résultat de géolocalisation pour $ip :"
+    echo
 
+    # Appel API + extraction des champs utiles
+    curl -s "https://ipinfo.io/${ip}/json" | jq -r '
+        "IP: \(.ip)",
+        "Ville: \(.city)",
+        "Région: \(.region)",
+        "Pays: \(.country)",
+        "Fournisseur: \(.org)",
+        "Code Postal: \(.postal)",
+        "Localisation GPS: \(.loc)"
+    '
+
+    echo
     echo "=================================="
-    echo "IP Geolocation for $ip:"
-    cat geolocation.json
-    rm -f geolocation.json
-    echo "=================================="
-    read -p "Press Enter to continue..."
+    read -p "Appuie sur Entrée pour continuer..."
     ip_geo_lookup
 }
 
-# Lancement du menu
+# Démarrer le menu
 menu
